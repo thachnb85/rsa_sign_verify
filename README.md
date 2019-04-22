@@ -5,9 +5,15 @@ How to sign and verify message using SHA256/RSA
 echo -n "abc" > data.txt
 
 ## RSA keys
+```
 openssl genrsa -out private.pem 2048
 openssl rsa -in private.pem -pubout >  public.pem
+```
+
+```
 cat private.pem
+```
+
 ```
 -----BEGIN RSA PRIVATE KEY-----
 MIIEogIBAAKCAQEA1SU2jzpFxPleVwlMMjz73LMQAzVcJ1l82Jm8/meif4Jhi8Sa
@@ -41,9 +47,10 @@ V2g2rWuHeGvGnwg7KJTYCaYvIUlpbpNFF3K5NOrjWietvUH4UuY=
 ### Open SSL
 
 Generate signature:
+```
 openssl dgst -sha256 -sign private.pem -out sign_using_openssl data.txt
-
 hexdump signature
+
 
 0000000 7c e7 8f 44 2a 6e 8d 73 95 68 f1 d5 ed a7 f0 bc
 0000010 c6 4a 64 2d 3d 02 b8 c9 04 b7 1b be c7 c0 60 e2
@@ -61,23 +68,26 @@ hexdump signature
 00000d0 80 b2 bf 62 b2 66 3f 71 89 f5 8b e1 91 32 97 eb
 00000e0 60 b2 31 c2 2a d4 35 8d 18 1c 1b c1 42 5f 07 ea
 00000f0 a4 bb d9 5c 18 5b 79 ed 6d 55 f4 64 34 7c 07 87
-
+```
 Verify signature:
+```
 openssl dgst -sha256 -verify public.pem -signature sign_using_openssl data.txt
 Verified OK
-
+```
 
 ### Python using M2Crypto
+```
 import M2Crypto
 import hashlib
 rsa = M2Crypto.RSA.load_key("private.pem")
 digest = hashlib.new('sha256', 'abc').digest()
 open("sig_python_using_m2crypto", "w").write(rsa.sign(digest, "sha256"))
+```
 
-
+```
 openssl dgst -sha256 -verify public.pem -signature sig_python_using_m2crypto data.txt
 Verified OK
-
+```
 ### Dart
 ```
 import 'package:encrypt/encrypt.dart';
